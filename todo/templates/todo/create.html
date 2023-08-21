@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+    {% block header %}
+        <h1>New Task</h1>
+    {% endblock %}
+
+    {% block content %}
+        <form action="{{ url_for('todo.create') }}" method="post">
+            <label for="description">Description</label>
+            <input type="text" name="description" id="description" required>
+            <input type="submit" value="Create">
+        </form>
+    {% endblock %}
+
+
+

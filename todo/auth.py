@@ -61,7 +61,7 @@ def login():
             # Store user ID in session after successful login
             session.clear()
             session['user_id'] = user['id']
-            return redirect(url_for('index'))
+            return redirect(url_for('todo.index'))
         
         flash(error)
     return render_template('auth/login.html')
@@ -91,3 +91,10 @@ def login_required(view):
         return view(**kwargs)
     
     return wrapped_view
+
+
+@bp.route('/logout')
+def logout():
+    # Clear the user ID from the session
+    session.clear()
+    return redirect(url_for('auth.login'))
