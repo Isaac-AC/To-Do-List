@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block header %}
-<h1>To Do List</h1>
+    <h1>To Do List</h1>
     {% if g.user %}
         <a class="action" href="{{ url_for('todo.create') }}">New Task</a>
     {% endif %}
@@ -19,12 +19,12 @@
                             {{ todo['description'] }}
                         {% endif %}
                     </h1>
-                    <span class="todo">{{ todo['description'] }}</span>
+                    <span class="date">{{ todo['created_at'].strftime('%Y-%m-%d') }}</span>
                     <div class="actions">
-                        <span class="date">{{ todo['created_at'].strftime('%Y-%m-%d') }}</span>
-                    {% if g.user %}
-                        <a class="action" href="{{ url_for('todo.update', id=todo['id']) }}">Edit</a>
-                    {% endif %}
+                        {% if g.user %}
+                            <a class="action" href="{{ url_for('todo.update', id=todo['id']) }}">Edit</a>
+                        {% endif %}
+                    </div>
                 </li>
                 {% if not loop.last %}
                     <hr>
@@ -33,5 +33,9 @@
         </ul>
     {% else %}
         <p>No tasks yet. Why not <a href="{{ url_for('todo.create') }}">create one</a>?</p>
+    {% endif %}
+    
+    {% if g.user %}
+        <a class="action" href="{{ url_for('todo.create') }}">New Task</a>
     {% endif %}
 {% endblock %}

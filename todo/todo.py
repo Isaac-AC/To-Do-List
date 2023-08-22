@@ -26,7 +26,9 @@ def index():
     c.execute(
         'SELECT t.id, description, completed, created_at, created_by, username'
         ' FROM todo t JOIN user u ON t.created_by = u.id'
-        ' ORDER BY created_at DESC'
+        ' WHERE t.created_by = %s'
+        ' ORDER BY created_at DESC',
+        (g.user['id'],)
     )
 
     # Fetch all resulting records from the query
@@ -98,8 +100,8 @@ def update(id):
             db, c = get_db()
             c.execute(
                 'UPDATE todo SET description = %s, completed = %s'
-                ' WHERE id = %s',
-                (description, completed, id)
+                ' WHERE id = %s and created_by = %s',
+                (description, completed, id, g.user['id'])
             )
             db.commit()
             return redirect(url_for('todo.index'))
@@ -107,8 +109,11 @@ def update(id):
     return render_template('todo/update.html', todo=todo)
 
 
-@bp.route('/<int:id>/update', methods=['POST'])
+@bp.route('/<int:id>/delete', methods=['POST'])
 @login_required
-def delete():
-    return render_template('todo/update.html', todo=todo)
+def delete(id):
+    db, c = get_db()
+    c.execute('DELETE FROM todo WHERE id = %s and created_by = %s', (id, g.user['id']))
+    db.commit()
 
+    return redirect(url_for('todo.index'))
